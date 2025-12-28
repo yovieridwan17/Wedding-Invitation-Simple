@@ -77,7 +77,7 @@ const deleteGuest = async (id) => {
 };
 
 const copyLink = (slug) => {
-  const fullUrl = `${window.location.origin}/?to=${slugToNiceName(slug)}`;
+  const fullUrl = `${window.location.origin}/#/?to=${slugToNiceName(slug)}`;
   navigator.clipboard.writeText(fullUrl);
   alert("Link tersalin!\n" + fullUrl);
 };
