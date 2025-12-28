@@ -15,7 +15,7 @@ const handleLogin = () => {
     localStorage.setItem('isAdmin', 'true');
     fetchGuests();
   } else {
-    errorMsg.value = 'Password salah, Pak!';
+    errorMsg.value = 'Password salah !';
   }
 };
 
