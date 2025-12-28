@@ -92,7 +92,7 @@ const openQrCode = (guest) => {
   qrName.value = guest.name;
   // Isi QR Code adalah Link Undangan Tamu tersebut
   // Jadi kalau discan, langsung buka undangan milik dia
-  qrValue.value = `${window.location.origin}/?to=${slugToNiceName(guest.slug)}`;
+  qrValue.value = `${window.location.origin}/#/?to=${slugToNiceName(guest.slug)}`;
   showQrModal.value = true;
 };
 </script>
