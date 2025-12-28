@@ -1,22 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 // Import Halaman
-import Invitation from './components/Invitation.vue';
-import Dashboard from './components/Dashboard.vue';
-import QrScanner from './components/QrScanner.vue';
+import Invitation from '../components/Hero.vue'; // Pastikan path ini benar sesuai file bapak (Hero/Invitation)
+import Dashboard from '../components/Dashboard.vue';
+import QrScanner from '../components/QrScanner.vue';
 
 const routes = [
   { 
-    path: '/',          // URL: domain.com/
+    path: '/',          
     name: 'Home', 
     component: Invitation 
   },
   { 
-    path: '/admin',     // URL: domain.com/admin
+    path: '/admin',     
     name: 'Admin', 
     component: Dashboard 
   },
-  // Nanti kita tambah halaman Scan QR di sini
   {
     path : '/scan',
     name : 'scan',
@@ -25,7 +24,9 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  // --- BAGIAN INI YANG PENTING DIUBAH ---
+  // Gunakan createWebHashHistory() agar tidak error 404 di Vercel
+  history: createWebHashHistory(),
   routes,
 });
 
