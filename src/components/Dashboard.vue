@@ -274,6 +274,9 @@ const goToScanner = () => {
               </td>
               <td class="p-4 text-center">
                 <div class="flex justify-center gap-2">
+                    <button @click="shareToWa(guest)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1 transition shadow-sm" title="Kirim WA">
+                      📲 WA
+                    </button>
                   <button @click="copyLink(guest.slug)" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm">🔗 Link</button>
                   
                   <button @click="openQrCode(guest)" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm flex items-center gap-1">
