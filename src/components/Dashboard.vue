@@ -126,12 +126,19 @@ const addGuest = async () => {
   if (!newName.value) return alert("Nama wajib diisi!");
   isLoading.value = true;
 
-  // --- PERBAIKAN DI SINI ---
-  // Penjelasan Regex: 
-  // [^\w-.,] artinya: Hapus semua karakter KECUALI (^) Huruf/Angka (\w), Strip (-), Titik (.), dan Koma (,)
+  // --- PERBAIKAN LOGIC SLUG ---
+  // Penjelasan Simbol yang diizinkan sekarang:
+  // \w = Huruf & Angka
+  // -  = Strip (Pengganti spasi)
+  // .  = Titik
+  // ,  = Koma
+  // ;  = Titik Koma (YANG BAPAK MINTA)
+  // '  = Petik satu (Contoh: Ma'ruf)
+  // () = Kurung (Contoh: (Alm))
+  
   const slug = newName.value.toLowerCase()
-    .replace(/ /g, '-')            // 1. Spasi ubah jadi strip
-    .replace(/[^\w-.,]+/g, '');    // 2. Hapus simbol aneh, TAPI sisakan . dan ,
+    .replace(/ /g, '-')                 // 1. Spasi jadi strip
+    .replace(/[^\w-.,;()']+/g, '');     // 2. Hapus sisa sampah selain simbol di atas
 
   // Simpan ke database
   const { error } = await supabase
