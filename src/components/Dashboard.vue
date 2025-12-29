@@ -1,7 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue'; // Tambah onBeforeUnmount
 import { supabase } from '../supabase';
-import QrcodeVue from 'qrcode.vue'; // <-- 1. Import Library QR
+import QrcodeVue from 'qrcode.vue';
+import { useRouter } from 'vue-router'; 
+
+const router = useRouter();
+
+// --- KONFIGURASI SESI ---
+const SESSION_KEY = 'admin_session'; // Nama kunci di LocalStorage
+const SESSION_DURATION = 30 * 60 * 1000; // 30 Menit dalam milidetik
+let sessionTimer = null; // Variable untuk timer hitung mundur
 
 // --- LOGIN STATE ---
 const isAuthenticated = ref(false);
@@ -9,30 +17,92 @@ const passwordInput = ref('');
 const errorMsg = ref('');
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD; 
 
+// 1. LOGIC LOGIN (Simpan Waktu Kadaluarsa)
 const handleLogin = () => {
   if (passwordInput.value === ADMIN_PASSWORD) {
+    const now = new Date();
+    
+    // Kita simpan Objek: { value: true, expiry: JamSekarang + 30menit }
+    const sessionData = {
+      value: true,
+      expiry: now.getTime() + SESSION_DURATION,
+    };
+
+    localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
+    
     isAuthenticated.value = true;
-    localStorage.setItem('isAdmin', 'true');
     fetchGuests();
+    
+    // Mulai hitung mundur otomatis dari sekarang
+    startSessionTimer(SESSION_DURATION);
   } else {
     errorMsg.value = 'Password salah !';
   }
 };
 
-const logout = () => {
+// 2. LOGIC LOGOUT (Bersihkan Semuanya)
+const logout = (isAuto = false) => {
   isAuthenticated.value = false;
-  localStorage.removeItem('isAdmin');
-  window.location.href = '/'; 
+  localStorage.removeItem(SESSION_KEY);
+  
+  if (sessionTimer) clearTimeout(sessionTimer); // Matikan timer
+  
+  if (isAuto) {
+    alert("Sesi Anda telah habis (30 Menit). Silakan login kembali.");
+  }
+  
+  // Opsional: Reload halaman biar bersih
+  window.location.href = '/admin'; 
 };
 
-onMounted(() => {
-  if (localStorage.getItem('isAdmin') === 'true') {
-    isAuthenticated.value = true;
-    fetchGuests();
+// 3. LOGIC CEK SESI (Saat Halaman Dibuka/Refresh)
+const checkSession = () => {
+  const sessionStr = localStorage.getItem(SESSION_KEY);
+  
+  // Kalau tidak ada data sesi -> Logout
+  if (!sessionStr) return;
+
+  const session = JSON.parse(sessionStr);
+  const now = new Date().getTime();
+
+  // Kalau Waktu Sekarang > Waktu Kadaluarsa -> Logout
+  if (now > session.expiry) {
+    logout(true); // True artinya logout otomatis karena expired
+    return;
   }
+
+  // Kalau Masih Berlaku -> Masuk
+  isAuthenticated.value = true;
+  fetchGuests();
+
+  // Hitung sisa waktu yang ada, lalu pasang timer lagi
+  // (Misal user refresh halaman di menit ke-10, berarti sisa 20 menit)
+  const remainingTime = session.expiry - now;
+  startSessionTimer(remainingTime);
+};
+
+// Helper: Timer Penghancur Sesi
+const startSessionTimer = (duration) => {
+  // Reset timer lama kalau ada
+  if (sessionTimer) clearTimeout(sessionTimer);
+
+  // Set timer baru sesuai sisa waktu
+  sessionTimer = setTimeout(() => {
+    logout(true);
+  }, duration);
+};
+
+// --- LIFECYCLE VUE ---
+onMounted(() => {
+  checkSession(); // Cek saat pertama kali buka
 });
 
-// --- DASHBOARD LOGIC ---
+onBeforeUnmount(() => {
+  // Bersihkan timer kalau pindah halaman (biar memori aman)
+  if (sessionTimer) clearTimeout(sessionTimer);
+});
+
+// --- DASHBOARD LOGIC (SAMA SEPERTI SEBELUMNYA) ---
 const guests = ref([]);
 const newName = ref('');
 const newCategory = ref('Teman Kerja');
@@ -82,18 +152,19 @@ const copyLink = (slug) => {
   alert("Link tersalin!\n" + fullUrl);
 };
 
-// Helper: Ubah slug jadi Nama Cantik untuk URL
 const slugToNiceName = (slug) => {
   return slug.replace(/-/g, '+').replace(/\b\w/g, l => l.toUpperCase());
 }
 
-// FUNGSI BUKA MODAL QR
 const openQrCode = (guest) => {
   qrName.value = guest.name;
-  // Isi QR Code adalah Link Undangan Tamu tersebut
-  // Jadi kalau discan, langsung buka undangan milik dia
   qrValue.value = `${window.location.origin}/#/?to=${slugToNiceName(guest.slug)}`;
   showQrModal.value = true;
+};
+
+// Fungsi ke Scanner
+const goToScanner = () => {
+  router.push('/scan');
 };
 </script>
 
