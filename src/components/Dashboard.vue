@@ -115,16 +115,18 @@ const copyLink = (slug) => {
   alert("Link tersalin!\n" + fullUrl);
 };
 
-// --- LOGIC SHARE WA (DINAMIS) ---
 const shareToWa = (guest) => {
+  // 1. HITUNG LINKNYA DULUAN DI SINI (JANGAN DI DALAM PESAN)
+  // Ini akan menghasilkan: https://web-bapak.com/#/?to=Devi
   const fullUrl = `${window.location.origin}/#/?to=${slugToNiceName(guest.slug)}`;
   
-  // Ambil Nama dari data.js
-  // Pastikan data 'groom' dan 'bride' ada di file data.js
-  const groom = weddingData.groom?.nickName || "Nama Pria";
-  const bride = weddingData.bride?.nickName || "Nama Wanita";
+  // 2. SIAPKAN NAMA PENGANTIN
+  const groom = weddingData.groom?.nickName || "Wildan";
+  const bride = weddingData.bride?.nickName || "Deva";
   const coupleName = `${groom} & ${bride}`;
 
+  // 3. SUSUN PESANNYA
+  // Perhatikan di bagian link, kita panggil ${fullUrl} yang sudah dihitung di atas
   const message = `Assalamu'alaikum Wr. Wb
 Bismillahirahmanirrahim.
 
@@ -145,6 +147,7 @@ Mohon maaf perihal undangan hanya di bagikan melalui pesan ini. Terima kasih ban
 Wassalamu'alaikum Wr. Wb.
 Terima Kasih.`;
 
+  // 4. BUKA WHATSAPP
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
 };
 
