@@ -109,16 +109,17 @@ const copyLink = (slug) => {
   alert("Link tersalin!\n" + fullUrl);
 };
 
-// --- LOGIC SHARE WA ---
 const shareToWa = (guest) => {
-  // 1. Debugging: Cek di Console apakah link terbentuk
+  // --- BAGIAN 1: BIKIN LINK (PAKAI BACKTICK ` ) ---
+  // Perhatikan tanda ` di awal dan akhir baris ini
   const fullUrl = `${window.location.origin}/#/?to=${slugToNiceName(guest.slug)}`;
-  console.log("Link WA:", fullUrl); // <-- Cek Console Pak kalau masih error
-
+  
   const groom = weddingData.groom?.nickName || "Wildan";
   const bride = weddingData.bride?.nickName || "Deva";
   const coupleName = `${groom} & ${bride}`;
 
+  // --- BAGIAN 2: BIKIN PESAN (PAKAI BACKTICK ` ) ---
+  // Perhatikan tanda ` di awal baris const message
   const message = `Assalamu'alaikum Wr. Wb
 Bismillahirahmanirrahim.
 
@@ -137,11 +138,11 @@ Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk
 Mohon maaf perihal undangan hanya di bagikan melalui pesan ini. Terima kasih banyak atas perhatiannya.
 
 Wassalamu'alaikum Wr. Wb.
-Terima Kasih.`;
+Terima Kasih.`; // <--- Tanda backtick penutup di sini
 
+  // --- BAGIAN 3: BUKA WA (PAKAI BACKTICK ` ) ---
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
 };
-
 const openQrCode = (guest) => {
   qrName.value = guest.name;
   qrValue.value = `${window.location.origin}/#/?to=${slugToNiceName(guest.slug)}`;
