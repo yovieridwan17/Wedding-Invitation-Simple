@@ -184,10 +184,32 @@ const goToScanner = () => {
 
     <div v-else class="p-8 max-w-6xl mx-auto">
       
-      <div class="flex justify-between items-center mb-8 border-b pb-4">
-        <h1 class="text-3xl font-bold text-dark">Dashboard Undangan</h1>
-        <button @click="logout" class="bg-gray-800 text-white px-4 py-2 rounded text-sm">Logout</button>
-      </div>
+     <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4 gap-4">
+  
+  <div>
+    <h1 class="text-3xl font-bold text-dark">Dashboard Undangan</h1>
+    <p class="text-gray-500 text-sm">Total Tamu: {{ guests.length }}</p>
+  </div>
+
+  <div class="flex gap-3">
+    
+    <button 
+      @click="goToScanner" 
+      class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-lg font-bold shadow-md flex items-center gap-2 transition"
+    >
+      📷 Scan QR
+    </button>
+    
+    <button 
+      @click="logout" 
+      class="bg-gray-800 hover:bg-gray-900 text-white px-5 py-2 rounded-lg font-bold shadow-md transition"
+    >
+      Logout
+    </button>
+
+  </div>
+
+</div>
 
       <div class="bg-white p-6 rounded-xl shadow-md mb-8">
         <div class="flex flex-col md:flex-row gap-4">
