@@ -3,10 +3,8 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { supabase } from '../supabase';
 import QrcodeVue from 'qrcode.vue';
 import { useRouter } from 'vue-router';
-
-// 🔥 PERBAIKAN DISINI: 
-// Path '../data.js' artinya file ada di folder src (sejajar App.vue)
 import { weddingData } from '../data.js'; 
+import * as XLSX from 'xlsx'; // <--- 1. IMPORT LIBRARY XLSX
 
 const router = useRouter();
 
@@ -21,7 +19,7 @@ const passwordInput = ref('');
 const errorMsg = ref('');
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD; 
 
-// --- LOGIC LOGIN ---
+// --- LOGIC LOGIN (Sama) ---
 const handleLogin = () => {
   if (passwordInput.value === ADMIN_PASSWORD) {
     const now = new Date();
@@ -39,7 +37,7 @@ const logout = (isAuto = false) => {
   isAuthenticated.value = false;
   localStorage.removeItem(SESSION_KEY);
   if (sessionTimer) clearTimeout(sessionTimer);
-  if (isAuto) alert("Sesi habis (30 Menit). Silakan login kembali.");
+  if (isAuto) alert("Sesi habis. Silakan login kembali.");
   router.push('/admin'); 
 };
 
@@ -72,6 +70,9 @@ const showQrModal = ref(false);
 const qrValue = ref('');
 const qrName = ref('');
 
+// --- REF UNTUK FILE INPUT ---
+const fileInput = ref(null); // <--- Referensi ke elemen input file
+
 const fetchGuests = async () => {
   const { data, error } = await supabase.from('guests').select('*').order('created_at', { ascending: false });
   if (!error) guests.value = data;
@@ -80,7 +81,6 @@ const fetchGuests = async () => {
 const addGuest = async () => {
   if (!newName.value) return alert("Nama wajib diisi!");
   isLoading.value = true;
-  // Regex untuk nama dan gelar
   const slug = newName.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-.,;()']+/g, '');
   const { error } = await supabase.from('guests').insert([{ name: newName.value, category: newCategory.value, slug: slug }]);
   isLoading.value = false;
@@ -94,7 +94,99 @@ const deleteGuest = async (id) => {
   if (!error) fetchGuests();
 };
 
-// --- HELPER DI ATAS ---
+// --- 🔥 FITUR BARU: DOWNLOAD TEMPLATE ---
+const downloadTemplate = () => {
+  // 1. Buat Data Dummy untuk Contoh
+  const templateData = [
+    { "Nama Tamu": "Contoh: Budi Santoso", "Kategori": "Teman Kerja" },
+    { "Nama Tamu": "Siti Aminah, S.Pd", "Kategori": "Keluarga" }
+  ];
+
+  // 2. Buat Worksheet & Workbook
+  const ws = XLSX.utils.json_to_sheet(templateData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Template Tamu");
+
+  // 3. Download File
+  XLSX.writeFile(wb, "Template_Undangan.xlsx");
+};
+
+// --- 🔥 FITUR BARU: IMPORT EXCEL ---
+const triggerFileInput = () => {
+  fileInput.value.click(); // Klik input file yang tersembunyi
+};
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  
+  reader.onload = async (e) => {
+    try {
+      isLoading.value = true;
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      
+      // Ambil Sheet Pertama
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      
+      // Ubah ke JSON
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      // Proses Data (Mapping & Slug)
+      const formattedData = jsonData.map(row => {
+        // Ambil kolom berdasarkan nama header di template
+        // Pakai '||' buat jaga-jaga kalau user nulis header beda dikit (lowercase)
+        const rawName = row['Nama Tamu'] || row['nama tamu'] || row['Nama'] || '';
+        const rawCategory = row['Kategori'] || row['kategori'] || 'Teman Kerja';
+
+        if (!rawName) return null; // Skip kalau nama kosong
+
+        // Buat Slug (Sama persis dengan Regex addGuest)
+        const slug = rawName.toLowerCase()
+          .replace(/ /g, '-')
+          .replace(/[^\w-.,;()']+/g, '');
+
+        return {
+          name: rawName,
+          category: rawCategory,
+          slug: slug,
+          status: 'Belum Hadir' // Default status
+        };
+      }).filter(item => item !== null); // Hapus yang kosong
+
+      if (formattedData.length === 0) {
+        alert("File kosong atau format salah!");
+        isLoading.value = false;
+        return;
+      }
+
+      // Masukkan ke Supabase (Bulk Insert)
+      const { error } = await supabase.from('guests').insert(formattedData);
+
+      if (error) {
+        console.error(error);
+        alert("Gagal Import! Mungkin ada nama yang duplikat.");
+      } else {
+        alert(`Berhasil import ${formattedData.length} tamu!`);
+        fetchGuests(); // Refresh Tabel
+      }
+      
+    } catch (err) {
+      console.error(err);
+      alert("Gagal membaca file Excel.");
+    } finally {
+      isLoading.value = false;
+      event.target.value = ''; // Reset input file biar bisa upload file sama lagi
+    }
+  };
+
+  reader.readAsArrayBuffer(file);
+};
+
+// --- HELPER LAINNYA ---
 const slugToNiceName = (slug) => {
   if (!slug) return '';
   return slug.replace(/-/g, '+').replace(/\b\w/g, l => l.toUpperCase());
@@ -106,17 +198,12 @@ const copyLink = (slug) => {
   alert("Link tersalin!\n" + fullUrl);
 };
 
-// --- LOGIC SHARE WA (SUDAH DIPERBAIKI) ---
 const shareToWa = (guest) => {
-  // 1. Buat Link
   const fullUrl = `${window.location.origin}/#/?to=${slugToNiceName(guest.slug)}`;
-  
-  // 2. Ambil Nama Pengantin (Pakai ? biar gak error kalau kosong)
-  const groom = weddingData?.groom?.nickName || "Nama Pria";
-  const bride = weddingData?.bride?.nickName || "Nama Wanita";
+  const groom = weddingData?.groom?.nickName || "Pria";
+  const bride = weddingData?.bride?.nickName || "Wanita";
   const coupleName = `${groom} & ${bride}`;
 
-  // 3. Buat Pesan (Pakai Backtick ` bukan ' )
   const message = `Assalamu'alaikum Wr. Wb
 Bismillahirahmanirrahim.
 
@@ -179,12 +266,35 @@ const goToScanner = () => { router.push('/scan'); };
       </div>
 
       <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
-        <h3 class="font-bold text-gray-700 mb-4">Tambah Tamu</h3>
-        <div class="flex flex-col md:flex-row gap-4">
+        
+        <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Tambah Manual</h3>
+        <div class="flex flex-col md:flex-row gap-4 mb-8">
           <input v-model="newName" type="text" placeholder="Nama Tamu..." class="flex-1 border p-3 rounded-lg" @keyup.enter="addGuest">
           <select v-model="newCategory" class="border p-3 rounded-lg bg-gray-50"><option v-for="cat in categories" :key="cat">{{ cat }}</option></select>
           <button @click="addGuest" :disabled="isLoading" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold">{{ isLoading ? '...' : '+ Tambah' }}</button>
         </div>
+
+        <h3 class="font-bold text-gray-700 mb-4 border-b pb-2 flex justify-between items-center">
+          <span>Import dari Excel</span>
+          <button @click="downloadTemplate" class="text-sm text-green-600 hover:underline flex items-center gap-1">
+            📥 Download Template
+          </button>
+        </h3>
+        
+        <div class="flex flex-col md:flex-row gap-4 items-center bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
+          <div class="text-sm text-gray-500 flex-1">
+            <p>1. Download template di atas.</p>
+            <p>2. Isi data (Jangan ubah judul kolom).</p>
+            <p>3. Upload file Excel (.xlsx) di sini.</p>
+          </div>
+          
+          <input type="file" ref="fileInput" @change="handleFileUpload" accept=".xlsx, .xls" class="hidden">
+          
+          <button @click="triggerFileInput" :disabled="isLoading" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold shadow-md flex items-center gap-2 transition">
+            📂 {{ isLoading ? 'Sedang Proses...' : 'Upload Excel' }}
+          </button>
+        </div>
+
       </div>
 
       <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
@@ -208,22 +318,14 @@ const goToScanner = () => { router.push('/scan'); };
                     {{ guest.status }}
                   </span>
                 </td>
-                
                 <td class="p-4 text-center">
                   <div class="flex justify-center gap-2 flex-wrap">
-                    
-                    <button @click="shareToWa(guest)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1 transition shadow-sm" title="Kirim WA">
-                      📲 WA
-                    </button>
-
+                    <button @click="shareToWa(guest)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1 transition shadow-sm" title="Kirim WA">📲 WA</button>
                     <button @click="copyLink(guest.slug)" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded text-sm border transition">🔗 Copy</button>
-                    
                     <button @click="openQrCode(guest)" class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1 rounded text-sm border border-purple-200 flex items-center gap-1 transition">📱 QR</button>
-                    
                     <button @click="deleteGuest(guest.id)" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1 rounded text-sm border border-red-200 transition">🗑️</button>
                   </div>
                 </td>
-
               </tr>
             </tbody>
           </table>
