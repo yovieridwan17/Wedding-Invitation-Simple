@@ -35,7 +35,7 @@ import { weddingData } from '@/data';
             <div class="space-y-2 text-gray-300 text-sm mb-8">
               <p>Pukul: <span class="text-gold font-bold">{{weddingData.akad.time}}</span></p>
               <p>Bertempat di:</p>
-              <p class="font-medium text-white">Masjid Besar Purwosari</p>
+              <p class="font-medium text-white">Kediaman Mempelai Wanita</p>
               <p>{{weddingData.akad.location}}</p>
             </div>
           </div>
