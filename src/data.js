@@ -6,14 +6,14 @@ export const weddingData = {
     nickName: "Wildan", // Nama Panggilan
     fullName: "Muhammad Wildan Vicki Fahmi akbar, S.Kom., M.M", // Nama Lengkap
     father: "Alm.H.Moh Yusuf",
-    mother: "Ibu Siti Fatimah",
+    mother: "Ibu Siti Fatimah, S.Pd",
     instagram : "@wildanvfa"
   },
   bride: {
     nickName: "Deva",
-    fullName: "Deva Putri Dyana",
+    fullName: "Deva Putri Dyana, S.Tp",
     father: "Bpk. Muhammad Daud",
-    mother: "Ibu Dewi Santi",
+    mother: "Ibu Syanti Dewi",
     instagram: "@devaptrdyn"
   },
 
