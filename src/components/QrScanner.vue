@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { supabase } from '../supabase';
+import { supabase } from '../lib/supabase';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

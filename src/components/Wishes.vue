@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { supabase } from '../supabase'; // Import koneksi Supabase
+import { supabase } from '../lib/supabase'; // Import koneksi Supabase
 
 // --- STATE VARIABLES ---
 const name = ref('');

@@ -1,26 +1,86 @@
 @import "tailwindcss";
 
-/* 1. SETUP GOOGLE FONTS (Pack Lengkap: Playfair, Pinyon, Lato) */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+/* =========================================
+   1. PENDAFTARAN FONT LOKAL
+   ========================================= */
 
-/* 2. KONFIGURASI TEMA */
+/* Font Sambung Utama (Aston Script) */
+@font-face {
+  font-family: 'AstonScript';
+  src: url('/fonts/2512Aston-Script.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Judul Gagah (Trajan) */
+@font-face {
+  font-family: 'trajan';
+  src: url('/fonts/3113trajan.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Serif Elegan (Alcantera) */
+@font-face {
+  font-family: 'AlcanteraSerif';
+  src: url('/fonts/8377Alcantera-Serif.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Sambung Alternatif 1 (Tempting) */
+@font-face {
+  font-family: 'Tempting';
+  src: url('/fonts/5599Tempting.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Sambung Alternatif 2 (SnellBT - Classic) */
+@font-face {
+  font-family: 'SnellBT';
+  src: url('/fonts/6594SnellBT.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================================
+   2. KONFIGURASI TEMA (MAPPING FONT)
+   ========================================= */
 @theme {
+  /* --- PALET WARNA --- */
   --color-gold: #D4AF37;
-  --color-bronze: #8B7355; /* Warna Emas Tua / Perunggu */
-  --color-coffee: #5A4635; /* Warna Coklat Kopi Gelap */
-  --color-cream: #FFFBF2;  /* Warna Krem Background */
+  --color-bronze: #8B7355; 
+  --color-coffee: #5A4635; 
+  --color-cream: #FFFBF2;  
   
   --color-dark: #0f0f0f;
   --color-dark-surface: #1a1a1a;
 
-  /* DAFTAR FONT BARU */
-  --font-heading: 'Playfair Display', serif;   /* Untuk Judul Besar (Wildan & Deva) */
-  --font-subheading: 'Cormorant Garamond', serif; /* Untuk sub-judul elegan */
-  --font-script: 'Pinyon Script', cursive;     /* Untuk tulisan latin/sambung */
-  --font-body: 'Lato', sans-serif;             /* Untuk teks biasa/paragraf */
+  /* --- MAPPING FONT (BAGIAN INI YANG PENTING) --- */
+  
+  /* 1. JUDUL UTAMA (The Wedding of / Tanggal) -> Pakai TRAJAN (Gagah) */
+  --font-heading: 'trajan', serif;
+
+  /* 2. SUB-JUDUL (Keterangan/Ayat) -> Pakai ALCANTERA (Elegan) */
+  --font-subheading: 'AlcanteraSerif', serif;
+
+  /* 3. NAMA PENGANTIN (Wildan & Deva) -> Pakai ASTON SCRIPT (Indah) */
+  /* Opsi lain: ganti 'AstonScript' dengan 'Tempting' atau 'SnellBT' jika mau */
+  --font-script: 'AstonScript', cursive;
+  
+  /* 4. BODY TEXT (Paragraf panjang) -> Pakai System Font (Biar terbaca jelas di HP) */
+  --font-body: ui-sans-serif, system-ui, sans-serif;             
 }
 
-/* 3. GLOBAL STYLES */
+/* =========================================
+   3. GLOBAL STYLES
+   ========================================= */
 html {
   scroll-behavior: smooth;
 }
@@ -28,18 +88,27 @@ html {
 body {
   background-color: var(--color-dark);
   color: white;
-  font-family: var(--font-body); /* Default pakai Lato */
+  font-family: var(--font-body);
   margin: 0;
   width: 100%;
   min-height: 100vh;
 }
 
-/* Utility Classes */
+/* Utility Classes Helper */
 .font-script {
   font-family: var(--font-script);
 }
 
-/* ... sisa css animasi float biarkan saja ... */
+.font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0.05em; /* Trajan lebih bagus kalau agak renggang dikit */
+}
+
+.font-subheading {
+  font-family: var(--font-subheading);
+}
+
+/* Animasi Float */
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }

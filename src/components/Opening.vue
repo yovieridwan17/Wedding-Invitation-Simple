@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router'; // Import Router
-import { weddingData } from '../data';
+import { weddingData } from '../utilities/data';
 
 const emit = defineEmits(['open']);
 const route = useRoute();

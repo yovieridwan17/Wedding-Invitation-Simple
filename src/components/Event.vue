@@ -1,5 +1,5 @@
 <script setup>
-import { weddingData } from '@/data';
+import { weddingData } from '@/utilities/data';
 
   // Data Lokasi (Bisa diganti nanti)
   const mapLink = "https://goo.gl/maps/bHq4..."; // Ganti dengan link Google Maps asli nanti

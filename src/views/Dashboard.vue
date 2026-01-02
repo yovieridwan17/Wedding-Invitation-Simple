@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { supabase } from "../supabase";
+import { supabase } from "../lib/supabase";
 import QrcodeVue from "qrcode.vue";
 import { useRouter } from "vue-router";
-import { weddingData } from "../data.js";
+import { weddingData } from "../utilities/data.js";
 import * as XLSX from "xlsx";
 
 const router = useRouter();

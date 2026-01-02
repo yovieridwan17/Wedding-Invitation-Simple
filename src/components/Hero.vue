@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { weddingData } from '@/data';
+import { weddingData } from '@/utilities/data';
 
 </script>
 

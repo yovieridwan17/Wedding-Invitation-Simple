@@ -2,11 +2,11 @@
   import { ref, nextTick, onMounted } from 'vue'; 
   import AOS from 'aos';
   import 'aos/dist/aos.css';
-  import { supabase } from '../supabase';
+  import { supabase } from '../lib/supabase';
   
   // Import Semua Komponen Undangan
   import Decoration from './Decoration.vue';
-  import Opening from './Opening.vue';
+  import Opening from '../components/Opening.vue';
   import Hero from './Hero.vue';
   import Countdown from './Countdown.vue';
   import Couple from './Couple.vue';

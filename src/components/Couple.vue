@@ -1,5 +1,5 @@
 <script setup>
-import { weddingData } from '@/data';
+import { weddingData } from '@/utilities/data';
 
   // Tidak perlu logic khusus di sini, hanya tampilan statis
   </script>
