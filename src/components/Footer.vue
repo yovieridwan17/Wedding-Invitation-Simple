@@ -28,7 +28,7 @@ const scrollToTop = () => {
         </div>
       </div>
 
-      <div class="relative z-10 bg-[#f4f1ea] -mt-20 pt-24 pb-12 px-8 text-center rounded-b-[50px] shadow-2xl overflow-hidden border-t-0">
+      <div class="relative z-10 bg-[#f4f1ea] -mt-20 pt-24 pb-12 px-8 text-center rounded-b-[20px] shadow-2xl overflow-hidden border-t-0">
         
         <div class="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
 
