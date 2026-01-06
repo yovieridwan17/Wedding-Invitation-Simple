@@ -94,11 +94,11 @@ onMounted(async () => {
   <div ref="heroSection" class="relative w-full h-screen overflow-hidden bg-gray-200">
     
     <div ref="layer1_Sky" class="absolute inset-0 z-0">
-        <img src="../../images/GREEN-LAND-PII.webp" class="w-full h-full object-cover opacity-60 blur-[2px]" alt="Sky">
+        <img src="/images/GREEN-LAND-PII.webp" class="w-full h-full object-cover opacity-60 blur-[2px]" alt="Sky">
     </div>
 
     <div ref="layer2_Landscape" class="absolute inset-0 z-10">
-        <img src="../../images/GREEN-LAND-PII.webp" class="w-full h-full object-cover opacity-90 brightness-90" alt="Landscape">
+        <img src="/images/GREEN-LAND-PII.webp" class="w-full h-full object-cover opacity-90 brightness-90" alt="Landscape">
     </div>
 
     <div ref="layer3_Gazebo" class="absolute inset-0 z-20 flex items-center justify-center">
@@ -110,18 +110,18 @@ onMounted(async () => {
     </div>
 
     <div ref="finalFrameLayer" class="absolute inset-0 z-30 opacity-0">
-        <img src="../../images/FALLBACK-HIJAU-V2-MOTION-PII.jpg" 
+        <img src="/images/FALLBACK-HIJAU-V2-MOTION-PII.jpg" 
              class="w-full h-full object-cover" 
              alt="Final Frame">
         <div class="absolute inset-0 bg-black/10"></div>
     </div>
 
     <div ref="layer5_Blur" class="absolute inset-0 z-40 pointer-events-none flex justify-between items-end origin-bottom">
-         <img src="../../images/BUNGA6-GREEN-PII.webp" 
+         <img src="/images/BUNGA6-GREEN-PII.webp" 
               class="w-[100%] h-auto object-contain" 
               alt="Flower Left Clear">
          
-         <img src="../../images/BUNGA6-GREEN-PII.webp" 
+         <img src="/images/BUNGA6-GREEN-PII.webp" 
               class="w-[100%] h-auto object-contain -scale-x-100" 
               alt="Flower Right Clear">
     </div>
