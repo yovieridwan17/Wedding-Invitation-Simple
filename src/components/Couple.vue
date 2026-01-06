@@ -30,13 +30,13 @@ const bride = weddingData?.bride || defaultBride;
             <div class="flex flex-col items-center group">
                 <div class="couple-anim relative w-[280px] h-[350px] mb-6 flex justify-center items-center">
                     <div class="relative w-full h-full overflow-hidden rounded-full border-[3px] border-[#D4AF37]/60 shadow-2xl z-20">
-                        <img src="/images/deva.jpg" class="w-full h-full object-cover" alt="Pria">
+                        <img src="/images/IMG_20260106_091015_728.JPG" class="w-full h-full object-cover object-top" alt="Pria">
                     </div>
                 </div>
                 <div class="couple-anim relative z-40"> 
                     <h3 class="font-tempting text-4xl text-green font-bold mb-2 mt-2">{{ groom.nickName }}</h3>
-                    <h3 class="font-alcantera text-3xl text-marron mb-2">{{ groom.fullName }}</h3>
-                    <p class="font-serif text-lg text-[#284f20]">Putra dari {{ groom.father }} <br> & <br>{{ groom.mother }}</p>
+                    <h3 class="font-alcantera text-xl text-marron mb-2">{{ groom.fullName }}</h3>
+                    <p class="font-trajan text-sm text-[#284f20]">Putra dari {{ groom.father }} <br> & <br>{{ groom.mother }}</p>
                 </div>
             </div>
 
@@ -47,13 +47,13 @@ const bride = weddingData?.bride || defaultBride;
             <div class="flex flex-col items-center group">
                 <div class="couple-anim relative w-[280px] h-[350px] mb-6 flex justify-center items-center">
                     <div class="relative w-full h-full overflow-hidden rounded-full border-[3px] border-[#D4AF37]/60 shadow-2xl z-20">
-                         <img src="/images/wildan.jpg" class="w-full h-full object-cover" alt="Wanita">
+                         <img src="/images/BCK_2630.JPG" class="w-full h-full object-cover" alt="Wanita">
                     </div>
                 </div>
                 <div class="couple-anim relative z-40 mb-35">
                     <h3 class="font-tempting text-4xl text-green font-bold mb-2 mt-2">{{ bride.nickName }}</h3>
-                    <h3 class="font-alcantera text-3xl text-marron mb-2">{{ bride.fullName }}</h3>
-                    <p class="font-serif text-lg text-[#284f20]">Putra dari {{ bride.father }} <br> & <br>{{ bride.mother }}</p>
+                    <h3 class="font-alcantera text-xl text-marron mb-2">{{ bride.fullName }}</h3>
+                    <p class="font-trajan text-sm text-[#284f20]">Putra dari {{ bride.father }} <br> & <br>{{ bride.mother }}</p>
                 </div>
             </div>
 

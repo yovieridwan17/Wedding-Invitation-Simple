@@ -41,7 +41,7 @@ onUnmounted(() => {
   <section class="custom-anim relative w-full h-screen overflow-hidden flex flex-col justify-end pb-32 md:pb-40 text-white">
     
     <div class="absolute inset-0 z-0">
-        <img src="/images/BCK_2626.JPG" class="w-full h-full object-cover" alt="Background Countdown">
+        <img src="/images/BCK_2625.JPG" class="w-full h-full object-cover " alt="Background Countdown">
         <div class="absolute inset-0 bg-black/20"></div>
         <div class="absolute bottom-0 w-full h-[80%] bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
     </div>

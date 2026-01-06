@@ -99,7 +99,7 @@
              {
                y: 0,
                opacity: 1,
-               duration: 2.4,
+               duration: 2,
                stagger: 0.4, // Muncul berurutan (Jeda 0.2 detik)
                ease: "power2.out",
                scrollTrigger: {
@@ -123,7 +123,7 @@
              {
                y: 0,
                opacity: 1,
-               duration: 2.4,
+               duration: 2,
                stagger: 0.4, 
                ease: "power2.out",
                scrollTrigger: {
