@@ -84,13 +84,12 @@ onUnmounted(() => {
 
       <div class="grid grid-cols-2 gap-4 md:gap-6">
         
-        <div 
-          v-for="(img, index) in galleryImages" 
-          :key="img.id"
-          class="w-full h-full object-cover transform transition duration-700 
-         brightness-75 group-hover:brightness-100 group-hover:scale-110"
-          @click="openLightbox(index)"
-        >
+       <div 
+  v-for="(img, index) in galleryImages" 
+  :key="img.id"
+  class="gallery-card relative group cursor-pointer rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 aspect-[3/4]"
+  @click="openLightbox(index)"
+>
           <img 
             :src="img.src" 
             :alt="img.alt" 
