@@ -1,11 +1,11 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'; // 1. Tambah nextTick
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// --- DATA 4 FOTO GALERI ---
+// --- DATA FOTO ---
 const galleryImages = ref([
   { id: 1, src: '/images/1.JPG', alt: 'Momen 1' },
   { id: 2, src: '/images/2.JPG', alt: 'Momen 2' },
@@ -31,20 +31,26 @@ const closeLightbox = () => {
 
 // --- GSAP ANIMATION ---
 let ctx;
-onMounted(() => {
+
+onMounted(async () => { // 2. Tambahkan async
+  await nextTick(); // 3. Tunggu DOM selesai dirender sepenuhnya
+  
   ctx = gsap.context(() => {
     gsap.from(".gallery-card", {
       scrollTrigger: {
         trigger: "#gallery-section",
-        start: "top 70%",
+        start: "top 80%", // 4. Ubah jadi 80% biar lebih cepat muncul (safety trigger)
+        // markers: true, // Hapus komentar ini jika ingin mengecek garis trigger (debugging)
       },
-      y: 100,
-      opacity: 0,
-      duration: 1.2,
+      y: 50, // Kurangi jarak y biar animasinya tidak terlalu jauh
+      duration: 1,
       stagger: 0.2,
       ease: "power3.out"
     });
   });
+
+  // 5. Paksa ScrollTrigger hitung ulang posisi setelah gambar dimuat
+  ScrollTrigger.refresh(); 
 });
 
 onUnmounted(() => {
@@ -69,7 +75,7 @@ onUnmounted(() => {
     </div>
     <div class="container mx-auto px-6 relative z-10 max-w-4xl">
       
-      <div class="text-center mb-16 gallery-header">
+      <div class="text-center mb-5 gallery-header">
         <h2 class="font-serif text-4xl md:text-5xl text-yellow-500 mb-4 drop-shadow-lg">
           Our Moments
         </h2>
@@ -81,7 +87,8 @@ onUnmounted(() => {
         <div 
           v-for="(img, index) in galleryImages" 
           :key="img.id"
-          class="gallery-card relative group cursor-pointer rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 aspect-[3/4]"
+          class="w-full h-full object-cover transform transition duration-700 
+         brightness-75 group-hover:brightness-100 group-hover:scale-110"
           @click="openLightbox(index)"
         >
           <img 
