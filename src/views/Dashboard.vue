@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { supabase } from "../lib/supabase";
 import QrcodeVue from "qrcode.vue";
 import { useRouter } from "vue-router";
@@ -18,6 +18,11 @@ const isAuthenticated = ref(false);
 const passwordInput = ref("");
 const errorMsg = ref("");
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
+
+// --- PAGINATION & FILTER STATE ---
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+const selectedFilterCategory = ref(""); // State untuk Filter Kategori
 
 // --- LOGIC LOGIN ---
 const handleLogin = () => {
@@ -71,7 +76,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (sessionTimer) clearTimeout(sessionTimer);
 });
-9
+
 // --- CRUD DATA ---
 const guests = ref([]);
 const newName = ref("");
@@ -96,6 +101,43 @@ const fetchGuests = async () => {
     .select("*")
     .order("created_at", { ascending: false });
   if (!error) guests.value = data;
+};
+
+// --- FILTER & PAGINATION LOGIC (UPDATED) ---
+
+// 1. Filter Data Dulu
+const filteredGuests = computed(() => {
+  if (!selectedFilterCategory.value) {
+    return guests.value; // Jika kosong, tampilkan semua
+  }
+  return guests.value.filter(
+    (g) => g.category === selectedFilterCategory.value
+  );
+});
+
+// 2. Hitung Total Halaman berdasarkan Data yang sudah di-Filter
+const totalPages = computed(() => {
+  return Math.ceil(filteredGuests.value.length / itemsPerPage.value);
+});
+
+// 3. Potong Data (Slice) untuk halaman aktif
+const paginatedGuests = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredGuests.value.slice(start, end);
+});
+
+// Reset halaman ke 1 jika filter atau itemsPerPage berubah
+const handleFilterChange = () => {
+  currentPage.value = 1;
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
 };
 
 const addGuest = async () => {
@@ -222,7 +264,7 @@ const openQrCode = (guest) => {
   showQrModal.value = true;
 };
 
-// --- SHARE WA LOGIC (NEW: Update Database) ---
+// --- SHARE WA LOGIC ---
 const shareToWa = async (guest) => {
   const fullUrl = `${window.location.origin}/#/?to=${slugToNiceName(
     guest.slug
@@ -253,7 +295,6 @@ Terima Kasih.`;
 
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
 
-  // Update Status Kirim ke Supabase
   const { error } = await supabase
     .from("guests")
     .update({ invitation_sent: true })
@@ -306,8 +347,11 @@ const goToScanner = () => {
         <div>
           <h1 class="text-3xl font-bold text-gray-800">Dashboard Tamu</h1>
           <p class="text-gray-500 text-sm">
-            Total: {{ guests.length }} | Hadir:
-            {{ guests.filter((g) => g.status === "Hadir").length }}
+            Total Tamu: {{ guests.length }} |
+            <span class="text-green-600 font-bold"
+              >Hadir:
+              {{ guests.filter((g) => g.status === "Hadir").length }}</span
+            >
           </p>
         </div>
         <div class="flex gap-3">
@@ -395,10 +439,52 @@ const goToScanner = () => {
       <div
         class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200"
       >
+        <div
+          class="p-4 border-b bg-gray-50 flex flex-col md:flex-row justify-between items-center gap-4"
+        >
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <label class="text-sm font-bold text-gray-700 flex items-center gap-1">
+               🔍 Filter:
+            </label>
+            <select
+              v-model="selectedFilterCategory"
+              @change="handleFilterChange"
+              class="border rounded px-3 py-2 bg-white text-sm focus:ring-2 focus:ring-blue-500 w-full md:w-48"
+            >
+              <option value="">Semua Kategori</option>
+              <option v-for="cat in categories" :key="cat" :value="cat">
+                {{ cat }}
+              </option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2 text-sm text-gray-600">
+            <span>Show</span>
+            <select
+              v-model="itemsPerPage"
+              @change="handleFilterChange"
+              class="border rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option :value="10">10</option>
+              <option :value="25">25</option>
+              <option :value="50">50</option>
+              <option :value="guests.length > 0 ? guests.length : 1000">
+                Semua
+              </option>
+            </select>
+            <span class="hidden md:inline"
+              >| {{ (currentPage - 1) * itemsPerPage + 1 }} -
+              {{ Math.min(currentPage * itemsPerPage, filteredGuests.length) }}
+              dari {{ filteredGuests.length }}</span
+            >
+          </div>
+        </div>
+
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
               <tr>
+                <th class="p-4 border-b">No</th>
                 <th class="p-4 border-b">Nama Tamu</th>
                 <th class="p-4 border-b">Kategori</th>
                 <th class="p-4 border-b text-center">Status</th>
@@ -407,10 +493,13 @@ const goToScanner = () => {
             </thead>
             <tbody>
               <tr
-                v-for="guest in guests"
+                v-for="(guest, index) in paginatedGuests"
                 :key="guest.id"
                 class="border-b hover:bg-gray-50 transition"
               >
+                <td class="p-4 text-gray-500 font-mono text-xs">
+                  {{ (currentPage - 1) * itemsPerPage + index + 1 }}
+                </td>
                 <td class="p-4 font-bold text-gray-800">{{ guest.name }}</td>
                 <td class="p-4">
                   <span
@@ -443,32 +532,88 @@ const goToScanner = () => {
                       "
                       title="Kirim WA"
                     >
-                      <span v-if="guest.invitation_sent">✅ Terkirim</span>
+                      <span v-if="guest.invitation_sent">✅</span>
                       <span v-else>📲 WA</span>
                     </button>
                     <button
                       @click="copyLink(guest.slug)"
                       class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 rounded text-sm border transition"
                     >
-                      🔗 Copy
+                      🔗
                     </button>
                     <button
                       @click="openQrCode(guest)"
                       class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1 rounded text-sm border border-purple-200 flex items-center gap-1 transition"
                     >
-                      📱 QR
+                      📱
                     </button>
                     <button
                       @click="deleteGuest(guest.id)"
                       class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1 rounded text-sm border border-red-200 transition"
                     >
-                      ❌ delete
+                      ❌
                     </button>
                   </div>
                 </td>
               </tr>
+              <tr v-if="paginatedGuests.length === 0">
+                <td colspan="5" class="p-8 text-center text-gray-500 italic">
+                  <span v-if="selectedFilterCategory"
+                    >Tidak ada tamu di kategori "{{
+                      selectedFilterCategory
+                    }}".</span
+                  >
+                  <span v-else>Belum ada data tamu.</span>
+                </td>
+              </tr>
             </tbody>
           </table>
+        </div>
+
+        <div
+          v-if="filteredGuests.length > 0"
+          class="p-4 bg-gray-50 border-t flex justify-between items-center"
+        >
+          <button
+            @click="prevPage"
+            :disabled="currentPage === 1"
+            class="px-4 py-2 bg-white border rounded text-sm font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            ← Prev
+          </button>
+
+          <div class="flex gap-1">
+            <button
+              v-for="page in totalPages"
+              :key="page"
+              @click="currentPage = page"
+              class="w-8 h-8 flex items-center justify-center rounded text-sm font-medium transition"
+              :class="
+                currentPage === page
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white border hover:bg-gray-100 text-gray-600'
+              "
+            >
+              <span
+                v-if="
+                  Math.abs(currentPage - page) < 3 ||
+                  page === 1 ||
+                  page === totalPages
+                "
+              >
+                {{ page }}
+              </span>
+              <span v-else-if="Math.abs(currentPage - page) === 3">...</span>
+            </button>
+          </div>
+
+          <button
+            @click="nextPage"
+            :disabled="currentPage === totalPages"
+            class="px-4 py-2 bg-white border rounded text-sm font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next →
+          </button>
         </div>
       </div>
     </div>
