@@ -69,7 +69,7 @@ onUnmounted(() => {
         class="w-full h-full object-cover"
       />
 
-      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#1a2e25] via-[#1a2e25]/50 to-[#1a2e25]"></div>
       
       <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')]"></div>
     </div>

@@ -1,18 +1,20 @@
 <script setup>
-import { computed } from 'vue';
 import { weddingData } from '../utilities/data'; 
 
-// 1. SESUAIKAN PENGAMBILAN DATA
-// Langsung ambil dari root weddingData
+// 1. AMBIL DATA
 const akad = weddingData.akad;
 const resepsi = weddingData.resepsi;
 
-// 2. HELPER UNTUK MAPS
-// Karena di data.js belum ada 'mapLink', kita buat link pencarian otomatis berdasarkan alamat
-const getMapLink = (location) => {
-    // Jika nanti di data.js Anda tambahkan field mapLink, gunakan itu.
-    // Jika tidak, kita generate link search google maps.
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+// 2. LOGIC MAPS YANG BENAR
+const getMapLink = (eventData) => {
+    // Cek apakah ada link spesifik yang diisi di data.js?
+    if (eventData.mapLink && eventData.mapLink !== "" && !eventData.mapLink.includes("googleusercontent")) {
+        return eventData.mapLink;
+    }
+    
+    // Jika tidak ada link, buat link pencarian otomatis berdasarkan alamat (location)
+    // Format resmi Google Maps Search API
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventData.location)}`;
 };
 </script>
 
@@ -58,7 +60,7 @@ const getMapLink = (location) => {
                     </div>
                 </div>
 
-                <a :href="getMapLink(akad.location)" target="_blank" class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#1a2e25] transition-colors duration-300 font-serif text-sm tracking-wide">
+                <a :href="getMapLink(akad)" target="_blank" class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#1a2e25] transition-colors duration-300 font-serif text-sm tracking-wide">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                     Google Maps
                 </a>
@@ -87,7 +89,7 @@ const getMapLink = (location) => {
                     </div>
                 </div>
 
-                <a :href="getMapLink(resepsi.location)" target="_blank" class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#1a2e25] transition-colors duration-300 font-serif text-sm tracking-wide">
+                <a :href="getMapLink(resepsi)" target="_blank" class="mt-auto inline-flex items-center gap-2 px-6 py-2 rounded-full border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#1a2e25] transition-colors duration-300 font-serif text-sm tracking-wide">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                     Google Maps
                 </a>
