@@ -12,7 +12,7 @@ const bride = weddingData?.bride || defaultBride;
   <section class="couple-section relative w-full min-h-screen py-20 overflow-hidden text-white bg-slate-800">
     
     <div class="absolute inset-0 z-0">
-        <img src="/images/ART-WHITE-03-scaled-1-1.jpg" class="w-full h-full object-cover" alt="BG" onerror="this.style.display='none'">
+        <img src="/images/ART-WHITE-03-scaled-1-1.webp" class="w-full h-full object-cover" alt="BG" onerror="this.style.display='none'">
         <div class="absolute inset-0 bg-[#1a2e25]/20"></div> 
     </div>
 
@@ -30,7 +30,7 @@ const bride = weddingData?.bride || defaultBride;
             <div class="flex flex-col items-center group">
                 <div class="couple-anim relative w-[280px] h-[350px] mb-6 flex justify-center items-center">
                     <div class="relative w-full h-full overflow-hidden rounded-full border-[3px] border-[#D4AF37]/60 shadow-2xl z-20">
-                        <img src="/images/wildan.JPG" class="w-full h-full object-cover object-top" alt="Pria">
+                        <img src="/images/wildan.webp" class="w-full h-full object-cover object-top" alt="Pria">
                     </div>
                 </div>
                 <div class="couple-anim relative z-40"> 
@@ -47,7 +47,7 @@ const bride = weddingData?.bride || defaultBride;
             <div class="flex flex-col items-center group">
                 <div class="couple-anim relative w-[280px] h-[350px] mb-6 flex justify-center items-center">
                     <div class="relative w-full h-full overflow-hidden rounded-full border-[3px] border-[#D4AF37]/60 shadow-2xl z-20">
-                         <img src="/images/deva.JPG" class="w-full h-full object-cover" alt="Wanita">
+                         <img src="/images/deva.webp" class="w-full h-full object-cover" alt="Wanita">
                     </div>
                 </div>
                 <div class="couple-anim relative z-40 mb-35">

@@ -7,10 +7,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 // --- DATA FOTO ---
 const galleryImages = ref([
-  { id: 1, src: '/images/1.JPG', alt: 'Momen 1' },
-  { id: 2, src: '/images/2.JPG', alt: 'Momen 2' },
-  { id: 3, src: '/images/3.JPG', alt: 'Momen 3' },
-  { id: 4, src: '/images/4.JPG', alt: 'Momen 4' },
+  { id: 1, src: '/images/1.webp', alt: 'Momen 1' },
+  { id: 2, src: '/images/2.webp', alt: 'Momen 2' },
+  { id: 3, src: '/images/3.webp', alt: 'Momen 3' },
+  { id: 4, src: '/images/4.webp', alt: 'Momen 4' },
 ]);
 
 // --- LOGIC LIGHTBOX (Pop-up) ---

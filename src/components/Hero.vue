@@ -110,7 +110,7 @@ onMounted(async () => {
     </div>
 
     <div ref="finalFrameLayer" class="absolute inset-0 z-30 opacity-0">
-        <img src="/images/FALLBACK-HIJAU-V2-MOTION-PII.jpg" 
+        <img src="/images/FALLBACK-HIJAU-V2-MOTION-PII.webp" 
              class="w-full h-full object-cover" 
              alt="Final Frame">
         <div class="absolute inset-0 bg-black/10"></div>

@@ -174,16 +174,39 @@
 </script>
 <template>
   <div class="min-h-screen w-full flex bg-gray-900 overflow-hidden">
-    <div class="hidden xl:block xl:w-[70%] bg-cover bg-center relative z-0" :style="{ backgroundImage: `url('/images/GREEN-LAND-PII.webp')` }">
-         <div class="absolute inset-0 bg-black/60 flex flex-col items-end justify-center px-12 text-right">
-             </div>
+    
+    <div 
+      class="hidden xl:block xl:w-[70%] bg-cover bg-center relative z-0" 
+      :style="{ backgroundImage: `url('/images/GREEN-LAND-PII.webp')` }"
+    >
+      <div class="absolute inset-0 bg-black/55 flex flex-col items-end justify-center px-16 text-right">
+        
+        <h3 class="text-white text-xl font-trajan tracking-[0.2em] uppercase mb-2 animate-fade-in-up">
+          The Wedding of
+        </h3>
+
+        <h1 class="text-[#e3c66f] text-8xl font-alcantera mb-10 drop-shadow-lg animate-fade-in-up delay-100">
+          Wildan & Deva
+        </h1>
+
+        <p class="text-white text-lg leading-relaxed italic font-serif max-w-3xl mb-6 drop-shadow-md animate-fade-in-up delay-200">
+          "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."
+        </p>
+
+        <p class="text-white font-bold tracking-widest text-sm uppercase animate-fade-in-up delay-300">
+          (QS. AR-RUM (30): 21)
+        </p>
+
+      </div>
     </div>
 
     <div class="w-full xl:w-[30%] bg-dark text-white relative flex flex-col mx-auto shadow-2xl h-screen">
       <AudioControl ref="audioControl" v-show="isOpened" />
+      
       <div ref="openingLayer" class="absolute inset-0 z-50 bg-dark w-full h-full">
          <Opening @open="handleOpenInvitation" />
       </div>
+
       <div id="main-scroller" ref="mainContent" v-if="isOpened" class="flex-1 overflow-y-auto overflow-x-hidden relative z-10 no-scrollbar">
         <Hero /> 
         <Countdown />
@@ -195,5 +218,6 @@
         <Footer />
       </div>
     </div>
+
   </div>
 </template>

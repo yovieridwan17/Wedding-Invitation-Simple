@@ -21,7 +21,7 @@ const scrollToTop = () => {
         <div class="bg-[#f4f1ea] p-[5px] rounded-t-[160px] shadow-2xl transition-transform duration-700 hover:scale-[1.02]">
           
           <img 
-            src="/images/BCK_2610.JPG" 
+            src="/images/BCK_2610.webp" 
             alt="Mempelai" 
             class="w-full h-[420px] object-cover rounded-t-[155px] p-2"
           />

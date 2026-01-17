@@ -33,7 +33,7 @@ const openInvitation = () => {
     class="fixedw-full h-full relative inset-0 z-50 flex flex-col items-center justify-end pb-20 bg-black transition-transform duration-1000 ease-in-out"
     :class="{ '-translate-y-full': isHiding }"
   >
-    <div class="absolute inset-0 bg-[url('../../public/images/BCK_2629.JPG')] bg-cover bg-center opacity-40"></div>
+    <div class="absolute inset-0 bg-[url('../../public/images/BCK_2629.webp')] bg-cover bg-center opacity-40"></div>
     
     <div class="relative z-10 text-center px-4">
       <p class="font-body tracking-[0.3em] text-gray-300 mb-4 text-sm animate-pulse">THE WEDDING OF</p>

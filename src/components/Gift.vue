@@ -101,7 +101,7 @@ const copyToClipboard = async (text, index) => {
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V7H4v5"/><path d="M22 22H2v-6h20v6Z"/><path d="M12 7v5"/><path d="M12 16v6"/><path d="M12 2h10v5h-5"/><path d="M2 2h10v5H7"/></svg>
             </div>
             <h3 class="font-trajan text-xl text-[#D4AF37] mb-2">Kirim Kado</h3>
-            <p class="font-serif text-white/80 mb-4">{{ giftData.address }}</p>
+            
             
             <button @click="copyToClipboard(giftData.address, 99)" 
                     class="inline-flex items-center gap-2 px-6 py-2 text-sm border border-[#D4AF37] text-[#D4AF37] rounded-full hover:bg-[#D4AF37] hover:text-[#1a2e25] transition-colors">
