@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineExpose } from 'vue';
+import { ref, defineExpose } from "vue";
 
 // 1. STATE MUSIK
 const isPlaying = ref(false);
@@ -18,7 +18,8 @@ const toggleMusic = () => {
 // 3. FUNGSI UNTUK DIPANGGIL DARI LUAR (Oleh Invitation.vue)
 const playMusic = () => {
   // Coba play, kalau error (karena browser block) kita tangkap
-  audioPlayer.value.play()
+  audioPlayer.value
+    .play()
     .then(() => {
       isPlaying.value = true;
     })
@@ -30,18 +31,18 @@ const playMusic = () => {
 
 // 4. WAJIB: Buka akses fungsi ini ke luar
 defineExpose({
-  playMusic
+  playMusic,
 });
 </script>
 
 <template>
   <div class="fixed top-4 right-4 z-50">
-    <audio ref="audioPlayer" src="../../audio/musik5.mp3" loop></audio>
+    <audio ref="audioPlayer" src="../../audio/musik7.mp3" loop></audio>
 
-    <button 
+    <button
       @click="toggleMusic"
       class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/50 flex items-center justify-center animate-spin-slow"
-      :class="{ 'paused': !isPlaying }"
+      :class="{ paused: !isPlaying }"
     >
       <span v-if="isPlaying">🎵</span>
       <span v-else>🔇</span>
@@ -58,7 +59,11 @@ defineExpose({
   animation-play-state: paused;
 }
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
